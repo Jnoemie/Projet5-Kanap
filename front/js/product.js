@@ -27,9 +27,9 @@ fetch("http://localhost:3000/api/products/" + productId)
         document.getElementsByClassName('item__img')[0].appendChild(img)
     
     price.innerHTML= data.price
+    title.innerHTML=data.name 
+    description.innerHTML=data.description
 
-    let title= document.createElement(h1)
-    title.innerHTML=data.name
         
     
 
