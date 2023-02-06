@@ -73,9 +73,11 @@ async function displayBasket() {
     }
 }
 
-// creation de la fonction du calcul de prix et de quantité
+
 displayBasket();
 
+
+// creation de la fonction du calcul de prix et de quantité
 async function TotalPriceQuantity() {
 
     var quantityTotalCalcul = 0;
@@ -101,45 +103,45 @@ async function TotalPriceQuantity() {
 }
 
 
-
+//creation de la fonction de changement quantité
 
 function additem() {
     let newQuantity = Array.from(document.querySelectorAll(".cart__item__content__settings__quantity input"));
     let quantityValue = Array.from(document.querySelectorAll('.itemQuantity'));
 
-let addQty=[];
-//Boucle for en vas chercher tout les input dans lequelle on effectue un addEventListener pour changer la value des articles :
+    let addQty = [];
+    //Boucle for en vas chercher tout les input dans lequelle on effectue un addEventListener pour changer la value des articles :
     for (let i = 0; i < newQuantity.length; i++) {
 
         newQuantity[i].addEventListener("change", () => {
-        
-        // Copie du tableau localStorageProducts dans le tableau tabUpdate :
-        addQty = ProductLocalStorage;
-            
-        //Création d'une boucle for pour supprimer dans le local storage les valeur altxt, imageUrl, name et price : 
-        for (let i = 0; i < addQty.length; i++) { 
-        
+
+            // Copie du tableau localStorageProducts dans le tableau tabUpdate :
+            addQty = ProductLocalStorage;
+
+            //Création d'une boucle for pour supprimer dans le local storage les valeur altxt, imageUrl, name et price : 
+            for (let i = 0; i < addQty.length; i++) {
+
                 delete addQty[i].altTxt;
                 delete addQty[i].imageUrl;
                 delete addQty[i].name;
-                delete addQty[i].price; 
-        }
-            
-        //On modifie la quantité d'un élément à chaque index [i] du tableau écouté :
+                delete addQty[i].price;
+            }
+
+            //On modifie la quantité d'un élément à chaque index [i] du tableau écouté :
             addQty[i].quantity = quantityValue[i].value;
 
-        //Mise à jour du local storage :
+            //Mise à jour du local storage :
             localStorage.setItem("Basketitems", JSON.stringify(addQty));
 
-        //Rafraîchissement de la page :
+            //Rafraîchissement de la page :
             window.location.reload();
 
             TotalPriceQuantity();
         });
     }
-    
-    }
-   
+
+}
+
 // creation de la fonction pour le bouton supprimer 
 
 function deleteItem() {
@@ -183,7 +185,97 @@ const boutonOrder = document.getElementById('order');
 //console.log (boutonOrder)
 
 
+//Instauration formulaire avec regex
+function formContact() {
+    // Ajout des Regex
+    let form = document.querySelector(".cart__order__form");
 
+    //Création des expressions régulières
+    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+    let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+
+    // Ecoute de la modification du prénom
+    form.firstName.addEventListener('change', function() {
+        validationFirstName(this);
+    });
+
+    // Ecoute de la modification du prénom
+    form.lastName.addEventListener('change', function() {
+        validationLastName(this);
+    });
+
+    // Ecoute de la modification du prénom
+    form.address.addEventListener('change', function() {
+        validationAddress(this);
+    });
+
+    // Ecoute de la modification du prénom
+    form.city.addEventListener('change', function() {
+        validationCity(this);
+    });
+
+    // Ecoute de la modification du prénom
+    form.email.addEventListener('change', function() {
+        validationEmail(this);
+    });
+
+    //validation du prénom
+    const validationFirstName = function(inputFirstName) {
+        let firstNameErrorMsg = inputFirstName.nextElementSibling;
+
+        if (charRegExp.test(inputFirstName.value)) {
+            firstNameErrorMsg.innerHTML = '';
+        } else {
+            firstNameErrorMsg.innerHTML = 'Prénom non valide.';
+        }
+    };
+
+    //validation du nom
+    const validationLastName = function(inputLastName) {
+        let lastNameErrorMsg = inputLastName.nextElementSibling;
+
+        if (charRegExp.test(inputLastName.value)) {
+            lastNameErrorMsg.innerHTML = '';
+        } else {
+            lastNameErrorMsg.innerHTML = 'Nom non valide.';
+        }
+    };
+
+    //validation de l'adresse
+    const validationAddress = function(inputAddress) {
+        let addressErrorMsg = inputAddress.nextElementSibling;
+
+        if (addressRegExp.test(inputAddress.value)) {
+            addressErrorMsg.innerHTML = '';
+        } else {
+            addressErrorMsg.innerHTML = 'Adresse non valide.';
+        }
+    };
+
+    //validation de la ville
+    const validationCity = function(inputCity) {
+        let cityErrorMsg = inputCity.nextElementSibling;
+
+        if (charRegExp.test(inputCity.value)) {
+            cityErrorMsg.innerHTML = '';
+        } else {
+            cityErrorMsg.innerHTML = 'Ville non valide.';
+        }
+    };
+
+    //validation de l'email
+    const validationEmail = function(inputEmail) {
+        let emailErrorMsg = inputEmail.nextElementSibling;
+
+        if (emailRegExp.test(inputEmail.value)) {
+            emailErrorMsg.innerHTML = '';
+        } else {
+            emailErrorMsg.innerHTML = 'Mail non valide.';
+        }
+    };
+    }
+formContact();
 
 /*
 
