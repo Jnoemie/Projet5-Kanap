@@ -7,33 +7,32 @@ function getParams(url = window.location) {
 }
 
 function onAddToBasket(event) {
-    //let colorSelect = document.getElementById('colors')
+    
     const selectedColor = colors.options[colors.selectedIndex].value
     let quantity = document.getElementById('quantity')
     let selectedQuantity = quantity.value
 
 
-  //SI la colors ne vaut rien, veuillez choisir une couleur :
+
     if (selectedColor == '') {
         alert('Veuillez sélectionner une couleur');
         return;
     }
 
-    //SI NON SI la quantity est inférieur à 1 veuillez choisir une quantités valide : 
+
     else if (selectedQuantity < 1) {
         alert('Veuillez sélectionner le nombre d\'articles souhaités');
         return;
     }
 
 
-    //SI NON SI la quantity est supérieur à 100 veuillez choisir une quantités entre 1 à 100 produits : 
     else if (selectedQuantity > 100) {
         alert('Vous pouvez seulement sélectionner 1 à 100 produits.');
         return;
     }
 
 
-    //SI NON votre commande a bien ete enregistrée :
+    
     else {
         alert('Votre article a bien été ajouté au panier ');
     }

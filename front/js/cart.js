@@ -63,10 +63,10 @@ async function displayBasket() {
         </article>`;
 
 
-            products.push(data);
+            products.push(item.id);
 
             deleteItem();
-
+            additem();
             TotalPriceQuantity();
 
         }
@@ -96,11 +96,50 @@ async function TotalPriceQuantity() {
         let pricebasket = dataItem.price * ProductLocalStorage[i].quantity;
         //console.log(pricebasket)
         priceTotalCalcul += parseFloat(pricebasket);
-    } 
+    }
     document.querySelector('.cart__price').innerHTML = `<p>Total (<span id="totalQuantity">${quantityTotalCalcul}</span> articles) : <span id="totalPrice">${priceTotalCalcul}</span> €</p>`;
 }
 
 
+
+
+function additem() {
+    let newQuantity = Array.from(document.querySelectorAll(".cart__item__content__settings__quantity input"));
+    let quantityValue = Array.from(document.querySelectorAll('.itemQuantity'));
+
+let addQty=[];
+//Boucle for en vas chercher tout les input dans lequelle on effectue un addEventListener pour changer la value des articles :
+    for (let i = 0; i < newQuantity.length; i++) {
+
+        newQuantity[i].addEventListener("change", () => {
+        
+        // Copie du tableau localStorageProducts dans le tableau tabUpdate :
+        addQty = ProductLocalStorage;
+            
+        //Création d'une boucle for pour supprimer dans le local storage les valeur altxt, imageUrl, name et price : 
+        for (let i = 0; i < addQty.length; i++) { 
+        
+                delete addQty[i].altTxt;
+                delete addQty[i].imageUrl;
+                delete addQty[i].name;
+                delete addQty[i].price; 
+        }
+            
+        //On modifie la quantité d'un élément à chaque index [i] du tableau écouté :
+            addQty[i].quantity = quantityValue[i].value;
+
+        //Mise à jour du local storage :
+            localStorage.setItem("Basketitems", JSON.stringify(addQty));
+
+        //Rafraîchissement de la page :
+            window.location.reload();
+
+            TotalPriceQuantity();
+        });
+    }
+    
+    }
+   
 // creation de la fonction pour le bouton supprimer 
 
 function deleteItem() {
@@ -112,34 +151,167 @@ function deleteItem() {
     //console.log(basketDelete)
 
     for (let i = 0; i < deleteBouton.length; i++) {
-    
-    deleteBouton[i].addEventListener("click", () => {
-    
-        deleteBouton[i].style.display = "none"; 
 
-        
-        basketDelete = ProductLocalStorage;
+        deleteBouton[i].addEventListener("click", () => {
 
-        for (let i = 0; i < basketDelete.length; i++) { 
-        
-            delete basketDelete[i].altTxt;
-            delete basketDelete[i].imageUrl;
-            delete basketDelete[i].name;
-            delete basketDelete[i].price;
-        
-        }
 
-        basketDelete.splice([i], 1);
+            basketDelete = ProductLocalStorage;
 
-        ProductLocalStorage = localStorage.setItem("Basketitems", JSON.stringify(basketDelete));
+            for (let i = 0; i < basketDelete.length; i++) {
 
-    //console.log(deleteItem)
-        window.location.href = "cart.html";
-    });
+                delete basketDelete[i].altTxt;
+                delete basketDelete[i].imageUrl;
+                delete basketDelete[i].name;
+                delete basketDelete[i].price;
+
+            }
+
+            basketDelete.splice([i], 1);
+
+            ProductLocalStorage = localStorage.setItem("Basketitems", JSON.stringify(basketDelete));
+
+            //console.log(deleteItem)
+            window.location.href = "cart.html";
+        });
 
     }
 }
 
 
 //bouton commander 
-const boutonOrder =document.getElementById('order');
+const boutonOrder = document.getElementById('order');
+//console.log (boutonOrder)
+
+
+
+
+/*
+
+// variable pour le formulaire
+let firstNameForm = document.getElementById('firstName').value;
+
+let lastNameForm = document.getElementById('lastName').value;
+
+let addressForm = document.getElementById('address').value;
+
+let cityForm = document.getElementById('city').value;
+
+let emailForm = document.getElementById('email').value;
+
+// fonction verification
+
+function userFirstNameControl() {
+    const firstName = firstNameForm;
+    
+    if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(firstName)) {
+        
+        document.querySelector("#firstNameErrorMsg").textContent = "";
+        return true;
+    }
+
+    else {
+
+        document.querySelector("#firstNameErrorMsg").textContent = "prénom non valide";
+        return false;
+    }
+
+}
+console.log(userFirstNameControl)
+
+
+function userLastNameControl() {
+
+    const lastName = lastNameForm;
+    
+    if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(lastName)) {
+        
+        document.querySelector("#lastNameErrorMsg").textContent = "";
+        return true;
+    }
+
+    else {
+        
+        document.querySelector("#lastNameErrorMsg").textContent = " Nom non valide";
+        return false;
+    }
+
+}
+console.log(userLastNameControl)
+
+
+function userAddressControl() {
+
+    const adresse = contact.address;
+
+    if (/^[A-Za-z0-9\s]{5,100}$/.test(adresse)) {
+        
+        document.querySelector("#addressErrorMsg").textContent = "";
+        return true;
+    }
+
+    else {
+        
+        document.querySelector("#addressErrorMsg").textContent = "Adresse non valide";
+        return false;
+    }
+
+}
+
+console.log(userAddressControl)
+
+
+function userCityControl() {
+
+    const city = cityForm;
+
+    if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(city)) {
+        
+        document.querySelector("#cityErrorMsg").textContent = "";
+        return true;
+    }
+
+    else {
+        
+        document.querySelector("#cityErrorMsg").textContent = "ville non valide";
+        return false;
+    }
+
+}
+
+console.log(userCityControl)
+
+
+function userEmailControle() {
+
+    const email = emailForm;
+    
+    if (/^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/.test(email)) {
+        
+        document.querySelector("#emailErrorMsg").textContent = "";
+        return true;
+    }
+
+    else {
+        
+        document.querySelector("#emailErrorMsg").textContent = "Email non valide";
+        return false;
+    }
+
+}
+console.log(userEmailControle)
+
+//if (userLastNameControl() && userLastNameControl() && userAddressControl() && userCityControl && userEmailControle) {
+
+  //  localStorage.setItem("formulaire", JSON.stringify(contact));
+
+//}
+
+//else {
+  //alert("Veuillez bien remplir le formulaire")
+//}
+
+// mise en palce de l'ecoute du bouton pour l'envoyer au back-end 
+//boutonOrder.addEventListener('click', (e) => {
+   // e.preventDefault();
+
+//})*/
