@@ -101,7 +101,7 @@ async function displayBasket() {
             products.push(item.id);
 
             deleteItem();
-            additem();
+            addItem();
             TotalPriceQuantity();
 
         }
@@ -133,17 +133,17 @@ async function TotalPriceQuantity() {
     }
     let productTotalQuantity = document.getElementById('totalQuantity');
     productTotalQuantity.innerHTML = quantityTotalCalcul;
-    console.log(quantityTotalCalcul);
+    //console.log(quantityTotalCalcul);
 
     let productTotalPrice = document.getElementById('totalPrice');
     productTotalPrice.innerHTML = priceTotalCalcul;
-    console.log(priceTotalCalcul);
+    //console.log(priceTotalCalcul);
 
 }
 
 //creation de la fonction de changement quantité
 
-function additem() {
+function addItem() {
 
     let productItem = document.querySelectorAll('.itemQuantity');
 
@@ -163,7 +163,7 @@ function additem() {
             };
 
             ProductLocalStorage[i] = newProductLocalStorage;
-
+        //console.log(ProductLocalStorage[i])
 
             //Mise à jour du local storage :
             localStorage.setItem("Basketitems", JSON.stringify(ProductLocalStorage));
@@ -314,6 +314,7 @@ boutonOrder.addEventListener('click', (e) => {
 
         //Mettre l'objet "contact" dans le local storage :
         localStorage.setItem("Basketitems", JSON.stringify(contact));
+        
         Server();
 
     }
@@ -333,7 +334,7 @@ boutonOrder.addEventListener('click', (e) => {
             })
             .then((server) => {
                 const orderId = server.orderId;
-                console.log(orderId);
+                //console.log(orderId);
                 // on redirige vers la page confirmation
                 if (orderId != undefined) {
                     location.href = 'confirmation.html?id=' + orderId;
