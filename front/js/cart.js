@@ -218,9 +218,16 @@ function deleteItem() {
     }
 }
 
+
+                    //formulaire//
+
+
 //bouton commander 
 const boutonOrder = document.getElementById('order');
 //console.log (boutonOrder)
+
+
+// declaration des expresssions regulière 
 
 let controlForm = {
     firstName: {
@@ -249,8 +256,10 @@ let controlForm = {
         errorMsg: 'Email invalide'
     }
 };
+// fonction verification 
 
 function validForm(check) {
+
     const Element = check.element;
     const Regex = check.regex;
     const errorMsg = check.errorMsg;
@@ -264,6 +273,8 @@ function validForm(check) {
     }
     return RegexValid;
 }
+
+
 const firstNameCheck = document.getElementById('firstName');
 firstNameCheck.addEventListener('change', () => validForm(controlForm.firstName));
 
@@ -279,10 +290,12 @@ cityCheck.addEventListener('change', () => validForm(controlForm.city));
 const emailCheck = document.getElementById('email');
 emailCheck.addEventListener('change', () => validForm(controlForm.email));
 
-// on écoute l'event au click de orderBtn pour contrôler, récupérer les informations et les envoyer plus tard
+
+
+// on écoute l'event au click de boutonOrder 
 boutonOrder.addEventListener('click', (e) => {
     e.preventDefault();
-
+// objet conctact recuperer pour la confirmation
     let contact = {
         firstName: firstNameCheck.value,
         lastName: lastNameCheck.value,
@@ -290,7 +303,7 @@ boutonOrder.addEventListener('click', (e) => {
         city: cityCheck.value,
         email: emailCheck.value
     };
-
+// verification si le formulaire est juste 
     if (
         validForm(controlForm.firstName) == false &&
         validForm(controlForm.lastName) == false &&
@@ -314,16 +327,16 @@ function Server() {
                 'Accept': 'application/json',
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ contact, products }), // clefs contact et products
+            body: JSON.stringify({ contact, products }), 
         })
-            // on récupère et stock la réponse de l'API (orderId)
+            // on récupère et stock la réponse de l'api
             .then((response) => {
                 return response.json();
             })
             .then((server) => {
                 const orderId = server.orderId;
                 console.log(orderId);
-                // si orderId n'est pas undefined on redirige l'utilisateur vers la page confirmation
+                // on redirige vers la page confirmation
                 if (orderId != undefined) {
                     location.href = 'confirmation.html?id=' + orderId;
                 }
