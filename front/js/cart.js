@@ -1,13 +1,4 @@
-//recuperation de local storage 
-var ProductLocalStorage = JSON.parse(localStorage.getItem("Basketitems"));
 
-//titre de la page html
-
-document.title = "Panier"
-
-// creation d'un tableau pour recuperer les informations pour la confirmation 
-
-let products = [];
 
 // creation d'une fonction pour recuperer les information dans l'api 
 function getDataFromAPI(productId) {
@@ -39,28 +30,72 @@ async function displayBasket() {
             let data = await getDataFromAPI(item.id);
             //console.log (data)
 
-            document.getElementById('cart__items').innerHTML +=
-                `<article class="cart__item" data-id="${item.id}" data-color="${item.color}">
-            <div class="cart__item__img">
-            <img src="${data.imageUrl}" alt="${data.altTxt}">
-            </div>
-            <div class="cart__item__content">
-            <div class="cart__item__content__description">
-                <h2>${data.name}</h2>
-                <p>${item.color}</p>
-                <p>${data.price}€</p>
-            </div>
-            <div class="cart__item__content__settings">
-                <div class="cart__item__content__settings__quantity">
-                <p>Qté : </p>
-                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${item.quantity}">
-                </div>
-                <div class="cart__item__content__settings__delete">
-                <p class="deleteItem">Supprimer</p>
-                </div>
-            </div>
-            </div>
-        </article>`;
+            let articleProduit = document.createElement("article");
+            articleProduit.className = "cart__item"
+            document.querySelector("#cart__items").appendChild(articleProduit);
+            articleProduit.setAttribute("data-id", item.id);
+            articleProduit.setAttribute("data-color", item.color);
+
+            let productDivImg = document.createElement("div");
+            articleProduit.appendChild(productDivImg);
+            productDivImg.className = "cart__item__img";
+
+            let productImg = document.createElement("img");
+            productDivImg.appendChild(productImg);
+            productImg.src = data.imageUrl;
+            productImg.alt = data.alttxt;
+
+            let productItemContent = document.createElement("div");
+            articleProduit.appendChild(productItemContent);
+            productItemContent.className = "cart__item__content";
+
+            let productItemContentTitlePrice = document.createElement("div");
+            productItemContent.appendChild(productItemContentTitlePrice);
+            productItemContentTitlePrice.className = "cart__item__content__description";
+
+            let productTitle = document.createElement("h2");
+            productItemContentTitlePrice.appendChild(productTitle);
+            productTitle.innerHTML = data.name;
+
+            let productColor = document.createElement("p");
+            productTitle.appendChild(productColor);
+            productColor.innerHTML = item.color;
+
+
+            let productPrice = document.createElement("p");
+            productItemContentTitlePrice.appendChild(productPrice);
+            productPrice.innerHTML = data.price;
+
+            let productItemContentSettings = document.createElement("div");
+            productItemContent.appendChild(productItemContentSettings);
+            productItemContentSettings.className = "cart__item__content__settings";
+
+            let productItemContentSettingsQuantity = document.createElement("div");
+            productItemContentSettings.appendChild(productItemContentSettingsQuantity);
+            productItemContentSettingsQuantity.className = "cart__item__content__settings__quantity";
+
+            let productQty = document.createElement("p");
+            productItemContentSettingsQuantity.appendChild(productQty);
+            productQty.innerHTML = "Qté : ";
+
+            let productQuantity = document.createElement("input");
+            productItemContentSettingsQuantity.appendChild(productQuantity);
+            productQuantity.value = item.quantity;
+            productQuantity.className = "itemQuantity";
+            productQuantity.setAttribute("type", "number");
+            productQuantity.setAttribute("min", "1");
+            productQuantity.setAttribute("max", "100");
+            productQuantity.setAttribute("name", "itemQuantity");
+
+            let productItemContentSettingsDelete = document.createElement("div");
+            productItemContentSettings.appendChild(productItemContentSettingsDelete);
+            productItemContentSettingsDelete.className = "cart__item__content__settings__delete";
+
+            let productSupprimer = document.createElement("p");
+            productItemContentSettingsDelete.appendChild(productSupprimer);
+            productSupprimer.className = "deleteItem";
+            productSupprimer.innerHTML = "Supprimer";
+
 
 
             products.push(item.id);
@@ -73,11 +108,8 @@ async function displayBasket() {
     }
 }
 
-
-displayBasket();
-
-
 // creation de la fonction du calcul de prix et de quantité
+
 async function TotalPriceQuantity() {
 
     var quantityTotalCalcul = 0;
@@ -99,9 +131,15 @@ async function TotalPriceQuantity() {
         //console.log(pricebasket)
         priceTotalCalcul += parseFloat(pricebasket);
     }
-    document.querySelector('.cart__price').innerHTML = `<p>Total (<span id="totalQuantity">${quantityTotalCalcul}</span> articles) : <span id="totalPrice">${priceTotalCalcul}</span> €</p>`;
-}
+    let productTotalQuantity = document.getElementById('totalQuantity');
+    productTotalQuantity.innerHTML = quantityTotalCalcul;
+    console.log(quantityTotalCalcul);
 
+    let productTotalPrice = document.getElementById('totalPrice');
+    productTotalPrice.innerHTML = priceTotalCalcul;
+    console.log(priceTotalCalcul);
+
+}
 
 //creation de la fonction de changement quantité
 
@@ -136,7 +174,7 @@ function additem() {
             //Rafraîchissement de la page :
             window.location.reload();
 
-            TotalPriceQuantity();
+
         });
     }
 
@@ -146,7 +184,7 @@ function additem() {
 
 function deleteItem() {
 
-    let deleteBouton = Array.from(document.querySelectorAll('.deleteItem'))
+    let deleteBouton = Array.from(document.querySelectorAll('.deleteItem'));
     //console.log(deleteBouton)
 
     let basketDelete = [];
@@ -173,237 +211,144 @@ function deleteItem() {
             ProductLocalStorage = localStorage.setItem("Basketitems", JSON.stringify(basketDelete));
 
             //console.log(deleteItem)
+            alert("Ce produit a été supprimer")
             window.location.href = "cart.html";
         });
 
     }
 }
 
-
 //bouton commander 
 const boutonOrder = document.getElementById('order');
 //console.log (boutonOrder)
 
-
-//Instauration formulaire avec regex
-function formContact() {
-    // Ajout des Regex
-    let form = document.querySelector(".cart__order__form");
-
-    //Création des expressions régulières
-    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-    let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
-
-    // Ecoute de la modification du prénom
-    form.firstName.addEventListener('change', function() {
-        validationFirstName(this);
-    });
-
-    // Ecoute de la modification du prénom
-    form.lastName.addEventListener('change', function() {
-        validationLastName(this);
-    });
-
-    // Ecoute de la modification du prénom
-    form.address.addEventListener('change', function() {
-        validationAddress(this);
-    });
-
-    // Ecoute de la modification du prénom
-    form.city.addEventListener('change', function() {
-        validationCity(this);
-    });
-
-    // Ecoute de la modification du prénom
-    form.email.addEventListener('change', function() {
-        validationEmail(this);
-    });
-
-    //validation du prénom
-    const validationFirstName = function(inputFirstName) {
-        let firstNameErrorMsg = inputFirstName.nextElementSibling;
-
-        if (charRegExp.test(inputFirstName.value)) {
-            firstNameErrorMsg.innerHTML = '';
-        } else {
-            firstNameErrorMsg.innerHTML = 'Prénom non valide.';
-        }
-    };
-
-    //validation du nom
-    const validationLastName = function(inputLastName) {
-        let lastNameErrorMsg = inputLastName.nextElementSibling;
-
-        if (charRegExp.test(inputLastName.value)) {
-            lastNameErrorMsg.innerHTML = '';
-        } else {
-            lastNameErrorMsg.innerHTML = 'Nom non valide.';
-        }
-    };
-
-    //validation de l'adresse
-    const validationAddress = function(inputAddress) {
-        let addressErrorMsg = inputAddress.nextElementSibling;
-
-        if (addressRegExp.test(inputAddress.value)) {
-            addressErrorMsg.innerHTML = '';
-        } else {
-            addressErrorMsg.innerHTML = 'Adresse non valide.';
-        }
-    };
-
-    //validation de la ville
-    const validationCity = function(inputCity) {
-        let cityErrorMsg = inputCity.nextElementSibling;
-
-        if (charRegExp.test(inputCity.value)) {
-            cityErrorMsg.innerHTML = '';
-        } else {
-            cityErrorMsg.innerHTML = 'Ville non valide.';
-        }
-    };
-
-    //validation de l'email
-    const validationEmail = function(inputEmail) {
-        let emailErrorMsg = inputEmail.nextElementSibling;
-
-        if (emailRegExp.test(inputEmail.value)) {
-            emailErrorMsg.innerHTML = '';
-        } else {
-            emailErrorMsg.innerHTML = 'Mail non valide.';
-        }
-    };
+let controlForm = {
+    firstName: {
+        element: document.getElementById('firstName'),
+        regex: /^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/,
+        errorMsg: 'Prénom invalide'
+    },
+    lastName: {
+        element: document.getElementById('lastName'),
+        regex: /^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/,
+        errorMsg: 'Nom invalide'
+    },
+    address: {
+        element: document.getElementById('address'),
+        regex: /^[a-zA-Z0-9.,-_ ]{5,50}[ ]{0,2}$/,
+        errorMsg: 'Adresse invalide'
+    },
+    city: {
+        element: document.getElementById('city'),
+        regex: /^[A-Za-z][A-Za-z\é\è\ê\ë\ï\œ\-\s]+$/,
+        errorMsg: 'Ville invalide'
+    },
+    email: {
+        element: document.getElementById('email'),
+        regex: /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/,
+        errorMsg: 'Email invalide'
     }
+};
+
+function validForm(check) {
+    const Element = check.element;
+    const Regex = check.regex;
+    const errorMsg = check.errorMsg;
+    const errorDiv = check.element.nextElementSibling;
+    const RegexValid = Regex.test(Element.value);
+
+    if (RegexValid) {
+        errorDiv.innerText = '';
+    } else {
+        errorDiv.innerText = errorMsg;
+    }
+    return RegexValid;
+}
+const firstNameCheck = document.getElementById('firstName');
+firstNameCheck.addEventListener('change', () => validForm(controlForm.firstName));
+
+const lastNameCheck = document.getElementById('lastName');
+lastNameCheck.addEventListener('change', () => validForm(controlForm.lastName));
+
+const addressCheck = document.getElementById('address');
+addressCheck.addEventListener('change', () => validForm(controlForm.address));
+
+const cityCheck = document.getElementById('city');
+cityCheck.addEventListener('change', () => validForm(controlForm.city));
+
+const emailCheck = document.getElementById('email');
+emailCheck.addEventListener('change', () => validForm(controlForm.email));
+
+// on écoute l'event au click de orderBtn pour contrôler, récupérer les informations et les envoyer plus tard
+boutonOrder.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    let contact = {
+        firstName: firstNameCheck.value,
+        lastName: lastNameCheck.value,
+        address: addressCheck.value,
+        city: cityCheck.value,
+        email: emailCheck.value
+    };
+
+    if (
+        validForm(controlForm.firstName) == false &&
+        validForm(controlForm.lastName) == false &&
+        validForm(controlForm.address) == false &&
+        validForm(controlForm.city) == false &&
+        validForm(controlForm.email) == false
+    ) {
+        alert(`Le formulaire est incorrect.`);
+    } else {
+
+        //Mettre l'objet "contact" dans le local storage :
+        localStorage.setItem("Basketitems", JSON.stringify(contact));
+        Server();
+
+    }
+
+function Server() {
+        fetch('http://localhost:3000/api/products/order', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ contact, products }), // clefs contact et products
+        })
+            // on récupère et stock la réponse de l'API (orderId)
+            .then((response) => {
+                return response.json();
+            })
+            .then((server) => {
+                const orderId = server.orderId;
+                console.log(orderId);
+                // si orderId n'est pas undefined on redirige l'utilisateur vers la page confirmation
+                if (orderId != undefined) {
+                    location.href = 'confirmation.html?id=' + orderId;
+                }
+            });
+    }
+}) 
+
+
+/*********/
+/* START */
+/*********/
+
+//recuperation de local storage 
+var ProductLocalStorage = JSON.parse(localStorage.getItem("Basketitems"));
+
+//titre de la page html
+
+document.title = "Panier"
+
+// creation d'un tableau pour recuperer les informations pour la confirmation 
+
+let products = [];
+
+displayBasket();
+
 formContact();
 
-/*
 
-// variable pour le formulaire
-let firstNameForm = document.getElementById('firstName').value;
-
-let lastNameForm = document.getElementById('lastName').value;
-
-let addressForm = document.getElementById('address').value;
-
-let cityForm = document.getElementById('city').value;
-
-let emailForm = document.getElementById('email').value;
-
-// fonction verification
-
-function userFirstNameControl() {
-    const firstName = firstNameForm;
-    
-    if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(firstName)) {
-        
-        document.querySelector("#firstNameErrorMsg").textContent = "";
-        return true;
-    }
-
-    else {
-
-        document.querySelector("#firstNameErrorMsg").textContent = "prénom non valide";
-        return false;
-    }
-
-}
-console.log(userFirstNameControl)
-
-
-function userLastNameControl() {
-
-    const lastName = lastNameForm;
-    
-    if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(lastName)) {
-        
-        document.querySelector("#lastNameErrorMsg").textContent = "";
-        return true;
-    }
-
-    else {
-        
-        document.querySelector("#lastNameErrorMsg").textContent = " Nom non valide";
-        return false;
-    }
-
-}
-console.log(userLastNameControl)
-
-
-function userAddressControl() {
-
-    const adresse = contact.address;
-
-    if (/^[A-Za-z0-9\s]{5,100}$/.test(adresse)) {
-        
-        document.querySelector("#addressErrorMsg").textContent = "";
-        return true;
-    }
-
-    else {
-        
-        document.querySelector("#addressErrorMsg").textContent = "Adresse non valide";
-        return false;
-    }
-
-}
-
-console.log(userAddressControl)
-
-
-function userCityControl() {
-
-    const city = cityForm;
-
-    if (/^([A-Za-z\s]{3,20})?([-]{0,1})?([A-Za-z]{3,20})$/.test(city)) {
-        
-        document.querySelector("#cityErrorMsg").textContent = "";
-        return true;
-    }
-
-    else {
-        
-        document.querySelector("#cityErrorMsg").textContent = "ville non valide";
-        return false;
-    }
-
-}
-
-console.log(userCityControl)
-
-
-function userEmailControle() {
-
-    const email = emailForm;
-    
-    if (/^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/.test(email)) {
-        
-        document.querySelector("#emailErrorMsg").textContent = "";
-        return true;
-    }
-
-    else {
-        
-        document.querySelector("#emailErrorMsg").textContent = "Email non valide";
-        return false;
-    }
-
-}
-console.log(userEmailControle)
-
-//if (userLastNameControl() && userLastNameControl() && userAddressControl() && userCityControl && userEmailControle) {
-
-  //  localStorage.setItem("formulaire", JSON.stringify(contact));
-
-//}
-
-//else {
-  //alert("Veuillez bien remplir le formulaire")
-//}
-
-// mise en palce de l'ecoute du bouton pour l'envoyer au back-end 
-//boutonOrder.addEventListener('click', (e) => {
-   // e.preventDefault();
-
-//})*/
