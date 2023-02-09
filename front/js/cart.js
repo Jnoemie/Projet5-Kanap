@@ -144,33 +144,31 @@ async function TotalPriceQuantity() {
 //creation de la fonction de changement quantité
 
 function additem() {
-    let newQuantity = Array.from(document.querySelectorAll(".cart__item__content__settings__quantity input"));
-    let quantityValue = Array.from(document.querySelectorAll('.itemQuantity'));
 
-    let addQty = [];
-    //Boucle for en vas chercher tout les input dans lequelle on effectue un addEventListener pour changer la value des articles :
-    for (let i = 0; i < newQuantity.length; i++) {
+    let productItem = document.querySelectorAll('.itemQuantity');
 
-        newQuantity[i].addEventListener("change", () => {
+    for (let i = 0; i < productItem.length; i++) {
+        productItem[i].addEventListener('change', (event) => {
+            event.preventDefault();
 
-            // Copie du tableau localStorageProducts dans le tableau tabUpdate :
-            addQty = ProductLocalStorage;
+            let ItemQuantity = productItem[i].value;
+            let TotalQuantity = document.getElementById('totalQuantity');
 
-            //Création d'une boucle for pour supprimer dans le local storage les valeur altxt, imageUrl, name et price : 
-            for (let i = 0; i < addQty.length; i++) {
+            const newProductLocalStorage = {
+                id: ProductLocalStorage[i].id,
+                img: ProductLocalStorage[i].img,
+                name: ProductLocalStorage[i].name,
+                color: ProductLocalStorage[i].color,
+                quantity: parseInt(ItemQuantity),
+            };
 
-                delete addQty[i].altTxt;
-                delete addQty[i].imageUrl;
-                delete addQty[i].name;
-                delete addQty[i].price;
-            }
+            ProductLocalStorage[i] = newProductLocalStorage;
 
-            //On modifie la quantité d'un élément à chaque index [i] du tableau écouté :
-            addQty[i].quantity = quantityValue[i].value;
 
             //Mise à jour du local storage :
-            localStorage.setItem("Basketitems", JSON.stringify(addQty));
+            localStorage.setItem("Basketitems", JSON.stringify(ProductLocalStorage));
 
+            TotalQuantity.innerHTML = TotalPriceQuantity();
             //Rafraîchissement de la page :
             window.location.reload();
 
@@ -219,7 +217,7 @@ function deleteItem() {
 }
 
 
-                    //formulaire//
+//formulaire//
 
 
 //bouton commander 
@@ -295,7 +293,7 @@ emailCheck.addEventListener('change', () => validForm(controlForm.email));
 // on écoute l'event au click de boutonOrder 
 boutonOrder.addEventListener('click', (e) => {
     e.preventDefault();
-// objet conctact recuperer pour la confirmation
+    // objet conctact recuperer pour la confirmation
     let contact = {
         firstName: firstNameCheck.value,
         lastName: lastNameCheck.value,
@@ -303,7 +301,7 @@ boutonOrder.addEventListener('click', (e) => {
         city: cityCheck.value,
         email: emailCheck.value
     };
-// verification si le formulaire est juste 
+    // verification si le formulaire est juste 
     if (
         validForm(controlForm.firstName) == false &&
         validForm(controlForm.lastName) == false &&
@@ -320,14 +318,14 @@ boutonOrder.addEventListener('click', (e) => {
 
     }
 
-function Server() {
+    function Server() {
         fetch('http://localhost:3000/api/products/order', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ contact, products }), 
+            body: JSON.stringify({ contact, products }),
         })
             // on récupère et stock la réponse de l'api
             .then((response) => {
@@ -342,7 +340,7 @@ function Server() {
                 }
             });
     }
-}) 
+})
 
 
 /*********/
