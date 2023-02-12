@@ -145,75 +145,63 @@ async function TotalPriceQuantity() {
 
 function addItem() {
 
-    let productItem = document.querySelectorAll('.itemQuantity');
+    document.querySelectorAll('.itemQuantity').forEach(input => {
+        input.addEventListener('change', function (event) {
+            let quantityInput = event.target;
+            let itemQtt= quantityInput.closest("article");
+            let itemIdQtt= itemQtt.dataset.id;
+            let itemColorQtt = itemQtt.dataset.color;
+            let newQtt = quantityInput.value
+            
+            console.log(itemIdQtt+''+ itemColorQtt+ ''+newQtt)
+        
+            Update(itemIdQtt, itemColorQtt,newQtt);
+            TotalPriceQuantity();
+            
 
-    for (let i = 0; i < productItem.length; i++) {
-        productItem[i].addEventListener('change', (event) => {
-            event.preventDefault();
-
-            let ItemQuantity = productItem[i].value;
-            let TotalQuantity = document.getElementById('totalQuantity');
-
-            const newProductLocalStorage = {
-                id: ProductLocalStorage[i].id,
-                img: ProductLocalStorage[i].img,
-                name: ProductLocalStorage[i].name,
-                color: ProductLocalStorage[i].color,
-                quantity: parseInt(ItemQuantity),
-            };
-
-            ProductLocalStorage[i] = newProductLocalStorage;
-        //console.log(ProductLocalStorage[i])
-
-            //Mise à jour du local storage :
-            localStorage.setItem("Basketitems", JSON.stringify(ProductLocalStorage));
-
-            TotalQuantity.innerHTML = TotalPriceQuantity();
-            //Rafraîchissement de la page :
-            window.location.reload();
-
-
-        });
-    }
-
-}
-
-// creation de la fonction pour le bouton supprimer 
+    });
+    })
+};
 
 function deleteItem() {
 
-    let deleteBouton = Array.from(document.querySelectorAll('.deleteItem'));
-    //console.log(deleteBouton)
 
-    let basketDelete = [];
-    //console.log(basketDelete)
+    document.querySelectorAll('.deleteItem').forEach(button => {
+        button.addEventListener("click", function (event) {
+            let deleteBtn = event.target
+            let itemDiv = deleteBtn.closest("article")
+            let itemId = itemDiv.dataset.id
+            let itemColor = itemDiv.dataset.color
+            console.log(itemId + ' ' + itemColor)  
+            deleteItemPlus(itemId, itemColor)
 
-    for (let i = 0; i < deleteBouton.length; i++) {
-
-        deleteBouton[i].addEventListener("click", () => {
-
-
-            basketDelete = ProductLocalStorage;
-
-            for (let i = 0; i < basketDelete.length; i++) {
-
-                delete basketDelete[i].altTxt;
-                delete basketDelete[i].imageUrl;
-                delete basketDelete[i].name;
-                delete basketDelete[i].price;
-
-            }
-
-            basketDelete.splice([i], 1);
-
-            ProductLocalStorage = localStorage.setItem("Basketitems", JSON.stringify(basketDelete));
-
-            //console.log(deleteItem)
             alert("Ce produit a été supprimer")
             window.location.href = "cart.html";
-        });
 
+        })
+    })
+}
+
+function deleteItemPlus(id, color) {
+    let basketDelete = [];
+
+    for (let i = 0; i < ProductLocalStorage.length; i++) {
+        if (ProductLocalStorage[i].id == id && ProductLocalStorage[i].color == color) {
+            // on est sur le bon, on le vire
+            basketDelete = ProductLocalStorage
+            basketDelete.splice([i], 1)
+            localStorage.setItem('Basketitems', JSON.stringify(basketDelete))
+            break;
+        }
     }
+    document.querySelectorAll('.cart__item').forEach(div => {
+        if (div.dataset.id == id) {
+            div.parentNode.removeChild(div)
+            return
+        }
+    })
+
+
 }
 
 
@@ -254,7 +242,8 @@ let controlForm = {
         errorMsg: 'Email invalide'
     }
 };
-// fonction verification 
+// fonction verification //
+
 
 function validForm(check) {
 
@@ -314,12 +303,15 @@ boutonOrder.addEventListener('click', (e) => {
 
         //Mettre l'objet "contact" dans le local storage :
         localStorage.setItem("Basketitems", JSON.stringify(contact));
-        
+
+        // on appelle la fonction server 
         Server();
 
     }
+    // mis en place de la fonction server
 
     function Server() {
+        // appelle a l'api pour effectuer un post 
         fetch('http://localhost:3000/api/products/order', {
             method: 'POST',
             headers: {
@@ -361,6 +353,13 @@ let products = [];
 
 displayBasket();
 
-formContact();
+function Update(productID,productColor, productQtt) {
+    for(let i= 0 ; i <ProductLocalStorage.length; i++ ){
+        if (ProductLocalStorage[i].id == productID && ProductLocalStorage[i].color == productColor){
+            ProductLocalStorage[i].quantity = productQtt;
+            localStorage.setItem('Basketitems', JSON.stringify(ProductLocalStorage))
+        }
+    }
+}
 
 

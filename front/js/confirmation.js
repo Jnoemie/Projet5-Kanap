@@ -1,12 +1,14 @@
-let url = new URLSearchParams(document.location.search);
+function getProductId() {
+    return new URL(location.href).searchParams.get('id')
+  }
+  
+  const orderId = getProductId();
+  //console.log(orderId);
 
-let id = url.get("id");
-
-const orderId = id;
 
 //Affichage de l'id du produit :
 
-const idConfirmation = document.getElementById("orderId");
+let idConfirmation = document.getElementById("orderId");
 
 idConfirmation.innerHTML = orderId;
 
