@@ -148,20 +148,35 @@ function addItem() {
     document.querySelectorAll('.itemQuantity').forEach(input => {
         input.addEventListener('change', function (event) {
             let quantityInput = event.target;
-            let itemQtt= quantityInput.closest("article");
-            let itemIdQtt= itemQtt.dataset.id;
+            let itemQtt = quantityInput.closest("article");
+            let itemIdQtt = itemQtt.dataset.id;
             let itemColorQtt = itemQtt.dataset.color;
             let newQtt = quantityInput.value
-            
-            console.log(itemIdQtt+''+ itemColorQtt+ ''+newQtt)
-        
-            Update(itemIdQtt, itemColorQtt,newQtt);
+
+            console.log(itemIdQtt + '' + itemColorQtt + '' + newQtt)
+
+            Update(itemIdQtt, itemColorQtt, newQtt);
             TotalPriceQuantity();
+
             
 
-    });
+
+        });
     })
-};
+}
+
+
+function Update(productID, productColor, productQtt) {
+    for (let i = 0; i < ProductLocalStorage.length; i++) {
+        if (ProductLocalStorage[i].id == productID && ProductLocalStorage[i].color == productColor) {
+            ProductLocalStorage[i].quantity = productQtt;
+            localStorage.setItem('Basketitems', JSON.stringify(ProductLocalStorage))
+            alert("Quantité modifiée")
+        }
+    }
+   
+}
+
 
 function deleteItem() {
 
@@ -172,12 +187,13 @@ function deleteItem() {
             let itemDiv = deleteBtn.closest("article")
             let itemId = itemDiv.dataset.id
             let itemColor = itemDiv.dataset.color
-            console.log(itemId + ' ' + itemColor)  
+            console.log(itemId + ' ' + itemColor)
             deleteItemPlus(itemId, itemColor)
 
-            alert("Ce produit a été supprimer")
+           
             window.location.href = "cart.html";
 
+          
         })
     })
 }
@@ -191,6 +207,7 @@ function deleteItemPlus(id, color) {
             basketDelete = ProductLocalStorage
             basketDelete.splice([i], 1)
             localStorage.setItem('Basketitems', JSON.stringify(basketDelete))
+            alert("Ce produit a été supprimer")
             break;
         }
     }
@@ -353,13 +370,5 @@ let products = [];
 
 displayBasket();
 
-function Update(productID,productColor, productQtt) {
-    for(let i= 0 ; i <ProductLocalStorage.length; i++ ){
-        if (ProductLocalStorage[i].id == productID && ProductLocalStorage[i].color == productColor){
-            ProductLocalStorage[i].quantity = productQtt;
-            localStorage.setItem('Basketitems', JSON.stringify(ProductLocalStorage))
-        }
-    }
-}
 
 

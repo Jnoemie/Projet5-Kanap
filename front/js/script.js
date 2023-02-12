@@ -1,7 +1,7 @@
 fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
     .then((data) => {
-        console.log(data)
+        //console.log(data)
         for (let i = 0; i < data.length; i++) {
             let link = document.createElement('a')
             link.href = "./product.html?id=" + data[i]._id
