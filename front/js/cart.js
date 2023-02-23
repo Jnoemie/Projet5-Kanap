@@ -32,7 +32,7 @@ async function displayBasket() {
 
             let articleProduit = document.createElement("article");
             articleProduit.className = "cart__item"
-            document.querySelector("#cart__items").appendChild(articleProduit);
+            document.getElementById("cart__items").appendChild(articleProduit);
             articleProduit.setAttribute("data-id", item.id);
             articleProduit.setAttribute("data-color", item.color);
 
@@ -157,10 +157,6 @@ function addItem() {
 
             Update(itemIdQtt, itemColorQtt, newQtt);
             TotalPriceQuantity();
-
-            
-
-
         });
     })
 }
@@ -216,7 +212,7 @@ function deleteItemPlus(id, color) {
             div.parentNode.removeChild(div)
             return
         }
-    })
+     })
 
 
 }
@@ -319,15 +315,15 @@ boutonOrder.addEventListener('click', (e) => {
     } else {
 
         //Mettre l'objet "contact" dans le local storage :
-        localStorage.setItem("Basketitems", JSON.stringify(contact));
+        //localStorage.setItem("Basketitems", JSON.stringify(contact));
 
         // on appelle la fonction server 
-        Server();
+        Server(contact);
 
     }
     // mis en place de la fonction server
 
-    function Server() {
+    function Server(contact) {
         // appelle a l'api pour effectuer un post 
         fetch('http://localhost:3000/api/products/order', {
             method: 'POST',
