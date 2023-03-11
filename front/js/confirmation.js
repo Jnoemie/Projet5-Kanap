@@ -1,6 +1,6 @@
 function getProductId() {
     return new URL(location.href).searchParams.get('id')
-  }
+  };
   
   const orderId = getProductId();
   //console.log(orderId);

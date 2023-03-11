@@ -4,7 +4,7 @@ function getParams(url = window.location) {
         params[key] = val;
     });
     return params;
-}
+};
 
 function onAddToBasket(event) {
     
@@ -56,18 +56,18 @@ function onAddToBasket(event) {
         basketItems.push(Kanap);
     }
     localStorage.setItem('Basketitems', JSON.stringify(basketItems))
-}
+};
 
 var basketItems = JSON.parse(localStorage.getItem('Basketitems'));
 if (basketItems == null) {
     basketItems = []
-}
-let params = getParams()
-var productId = params['id']
+};
+let params = getParams();
+var productId = params['id'];
 
 if (typeof productId == "undefined" || productId == 0) {
     window.location.href = "/404.html";
-}
+};
 
 // console.log("Affichage du produit : " + productId)
 fetch("http://localhost:3000/api/products/" + productId)
@@ -89,6 +89,6 @@ fetch("http://localhost:3000/api/products/" + productId)
             document.getElementById('colors').appendChild(option)
         }
     }
+    );
 
-    )
 document.getElementById('addToCart').addEventListener('click', onAddToBasket)

@@ -12,8 +12,7 @@ function getDataFromAPI(productId) {
         })
     //console.log(response)
     return response;
-}
-
+};
 // creation de la fonction pour recuperer et placer les données
 
 async function displayBasket() {
@@ -106,7 +105,7 @@ async function displayBasket() {
 
         }
     }
-}
+};
 
 // creation de la fonction du calcul de prix et de quantité
 
@@ -139,7 +138,7 @@ async function TotalPriceQuantity() {
     productTotalPrice.innerHTML = priceTotalCalcul;
     //console.log(priceTotalCalcul);
 
-}
+};
 
 //creation de la fonction de changement quantité
 
@@ -159,7 +158,7 @@ function addItem() {
             TotalPriceQuantity();
         });
     })
-}
+};
 
 
 function Update(productID, productColor, productQtt) {
@@ -170,8 +169,8 @@ function Update(productID, productColor, productQtt) {
             alert("Quantité modifiée")
         }
     }
-   
-}
+
+};
 
 
 function deleteItem() {
@@ -186,13 +185,13 @@ function deleteItem() {
             console.log(itemId + ' ' + itemColor)
             deleteItemPlus(itemId, itemColor)
 
-           
+
             window.location.href = "cart.html";
 
-          
+
         })
     })
-}
+};
 
 function deleteItemPlus(id, color) {
     let basketDelete = [];
@@ -212,10 +211,8 @@ function deleteItemPlus(id, color) {
             div.parentNode.removeChild(div)
             return
         }
-     })
-
-
-}
+    })
+};
 
 
 //formulaire//
@@ -272,7 +269,7 @@ function validForm(check) {
         errorDiv.innerText = errorMsg;
     }
     return RegexValid;
-}
+};
 
 
 const firstNameCheck = document.getElementById('firstName');
@@ -314,9 +311,6 @@ boutonOrder.addEventListener('click', (e) => {
         alert(`Le formulaire est incorrect.`);
     } else {
 
-        //Mettre l'objet "contact" dans le local storage :
-        //localStorage.setItem("Basketitems", JSON.stringify(contact));
-
         // on appelle la fonction server 
         Server(contact);
 
@@ -346,7 +340,7 @@ boutonOrder.addEventListener('click', (e) => {
                 }
             });
     }
-})
+});
 
 
 /*********/
@@ -358,7 +352,7 @@ var ProductLocalStorage = JSON.parse(localStorage.getItem("Basketitems"));
 
 //titre de la page html
 
-document.title = "Panier"
+document.title = "Panier";
 
 // creation d'un tableau pour recuperer les informations pour la confirmation 
 

@@ -27,6 +27,6 @@ fetch("http://localhost:3000/api/products")
             document.getElementById('items').appendChild(link)
         }
         // addProducts(data)
-    })
+    });
 
 
