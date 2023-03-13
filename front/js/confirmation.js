@@ -6,13 +6,13 @@ function getProductId() {
   //console.log(orderId);
 
 
-//Affichage de l'id du produit :
+//Affichage de l'id du produit:
 
 let idConfirmation = document.getElementById("orderId");
 
 idConfirmation.innerHTML = orderId;
 
-//Nettoyage du local storage :
+//Nettoyage du local storage:
 
 localStorage.clear();
 

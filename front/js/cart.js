@@ -248,7 +248,7 @@ let controlForm = {
     },
     email: {
         element: document.getElementById('email'),
-        regex: /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/,
+        regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
         errorMsg: 'Email invalide'
     }
 };
@@ -300,6 +300,9 @@ boutonOrder.addEventListener('click', (e) => {
         city: cityCheck.value,
         email: emailCheck.value
     };
+    if (ProductLocalStorage == null || ProductLocalStorage.length == 0) {
+        alert(`Votre panier est vide`);
+      }
     // verification si le formulaire est juste 
     if (
         validForm(controlForm.firstName) == false &&
@@ -309,7 +312,15 @@ boutonOrder.addEventListener('click', (e) => {
         validForm(controlForm.email) == false
     ) {
         alert(`Le formulaire est incorrect.`);
-    } else {
+    } 
+    if (
+        ProductLocalStorage.length > 0 &&
+        validForm(controlForm.firstName) &&
+        validForm(controlForm.lastName) &&
+        validForm(controlForm.address) &&
+        validForm(controlForm.city) &&
+        validForm(controlForm.email)
+      ){
 
         // on appelle la fonction server 
         Server(contact);

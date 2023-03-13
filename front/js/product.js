@@ -37,7 +37,7 @@ function onAddToBasket(event) {
         alert('Votre article a bien été ajouté au panier ');
     }
 
-
+// ajourt d'un article dans le local storage en verifiant que l'article ne si trouve pas deja 
     let found = false
     for (let i = 0; i < basketItems.length; i++) {
         if (basketItems[i].id == productId && basketItems[i].color == selectedColor) {
