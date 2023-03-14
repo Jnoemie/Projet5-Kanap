@@ -75,6 +75,8 @@ function onAddToBasket(event) {
             if (basketItems[i].quantity>100)
             {
                 basketItems[i].quantity =100;
+                alert ("le total pour cette articles est bloqué à 100 dans votre panier!");
+                
             }
         
             break;

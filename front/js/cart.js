@@ -155,13 +155,12 @@ function addItem() {
             if (newQtt > 100) { 
                 newQtt = 100;
                 alert('Vous pouvez seulement sélectionner 1 à 100 produits.');
-                return;
+                
             }
 
             if (newQtt < 1) {
                 newQtt = 1;
-                alert('Veuillez sélectionner le nombre d\'articles souhaités');
-                return;
+                alert('Veuillez sélectionner le nombre d\'articles souhaités');  
             }
             //console.log(itemIdQtt + '' + itemColorQtt + '' + newQtt)
 
@@ -178,8 +177,9 @@ function Update(productID, productColor, productQtt) {
             ProductLocalStorage[i].quantity = productQtt;
 
 
-            localStorage.setItem('Basketitems', JSON.stringify(ProductLocalStorage))
-            alert("Quantité modifiée")
+            localStorage.setItem('Basketitems', JSON.stringify(ProductLocalStorage));
+            alert("Quantité modifiée");
+            
         }
     }
 
