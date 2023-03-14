@@ -1,3 +1,4 @@
+// declaration d'une fonction recuperant l'url et en y recuperant les parametre 
 function getParams(url = window.location) {
     let params = {};
     new URL(url).searchParams.forEach(function (val, key) {
@@ -6,68 +7,13 @@ function getParams(url = window.location) {
     return params;
 };
 
-function onAddToBasket(event) {
-    
-    const selectedColor = colors.options[colors.selectedIndex].value
-    let quantity = document.getElementById('quantity')
-    let selectedQuantity = quantity.value
+// recuperation de parametre de params 
 
-
-
-    if (selectedColor == '') {
-        alert('Veuillez sélectionner une couleur');
-        return;
-    }
-
-
-    else if (selectedQuantity < 1) {
-        alert('Veuillez sélectionner le nombre d\'articles souhaités');
-        return;
-    }
-
-
-    else if (selectedQuantity > 100) {
-        alert('Vous pouvez seulement sélectionner 1 à 100 produits.');
-        return;
-    }
-
-
-    
-    else {
-        alert('Votre article a bien été ajouté au panier ');
-    }
-
-// ajourt d'un article dans le local storage en verifiant que l'article ne si trouve pas deja 
-    let found = false
-    for (let i = 0; i < basketItems.length; i++) {
-        if (basketItems[i].id == productId && basketItems[i].color == selectedColor) {
-            basketItems[i].quantity = parseInt(basketItems[i].quantity) + parseInt(quantity.value)
-            found = true
-            break;
-        }
-    }
-    if (!found) {
-        let Kanap =
-        {
-            id: productId,
-            color: selectedColor,
-            quantity: quantity.value,
-        }
-        basketItems.push(Kanap);
-    }
-    localStorage.setItem('Basketitems', JSON.stringify(basketItems))
-};
-
-var basketItems = JSON.parse(localStorage.getItem('Basketitems'));
-if (basketItems == null) {
-    basketItems = []
-};
 let params = getParams();
-var productId = params['id'];
 
-if (typeof productId == "undefined" || productId == 0) {
-    window.location.href = "/404.html";
-};
+// recuperation de l'id de produit selectionner
+
+var productId = params['id'];
 
 // console.log("Affichage du produit : " + productId)
 fetch("http://localhost:3000/api/products/" + productId)
@@ -90,5 +36,73 @@ fetch("http://localhost:3000/api/products/" + productId)
         }
     }
     );
+
+    
+    // declaration d'un fonction avec un evenement  qui met un objet dans local storage et qui ajuste la quantité si besoin 
+
+function onAddToBasket(event) {
+    
+    const selectedColor = colors.options[colors.selectedIndex].value
+    let quantity = document.getElementById('quantity')
+    let selectedQuantity = quantity.value
+// verification coleur et quantité 
+    if (selectedColor == '') {
+        alert('Veuillez sélectionner une couleur');
+        return;
+    }
+
+    else if (selectedQuantity < 1) {
+        alert('Veuillez sélectionner le nombre d\'articles souhaités');
+        return;
+    }
+
+    else if (selectedQuantity > 100) {
+        alert('Vous pouvez seulement sélectionner 1 à 100 produits.');
+        return;
+    }
+
+    else {
+        alert('Votre article a bien été ajouté au panier ');
+    }
+
+// ajout d'un article dans le local storage en verifiant que l'article ne si trouve pas deja 
+
+    let found = false
+    for (let i = 0; i < basketItems.length; i++) {
+        if (basketItems[i].id == productId && basketItems[i].color == selectedColor) {
+            basketItems[i].quantity = parseInt(basketItems[i].quantity) + parseInt(quantity.value)
+            found = true
+            if (basketItems[i].quantity>100)
+            {
+                basketItems[i].quantity =100;
+            }
+        
+            break;
+        }}
+
+    // si found renvoie false cree un nouvel element dans le tableau 
+    if (!found) {
+        let Kanap =
+        {
+            id: productId,
+            color: selectedColor,
+            quantity: quantity.value,
+        }
+        basketItems.push(Kanap);
+    }
+    localStorage.setItem('Basketitems', JSON.stringify(basketItems))
+};
+//recuperation des donné stoke dans le locale storage 
+var basketItems = JSON.parse(localStorage.getItem('Basketitems'));
+
+// si le local storage est vide 
+    if (basketItems == null) {
+        basketItems = []
+    };
+    
+    if (typeof productId == "undefined" || productId == 0) {
+        window.location.href = "/404.html";
+    };
+
 
 document.getElementById('addToCart').addEventListener('click', onAddToBasket)

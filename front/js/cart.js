@@ -151,8 +151,19 @@ function addItem() {
             let itemIdQtt = itemQtt.dataset.id;
             let itemColorQtt = itemQtt.dataset.color;
             let newQtt = quantityInput.value
+            // verification que la quantité soit comprise entre 1 et 100
+            if (newQtt > 100) { 
+                newQtt = 100;
+                alert('Vous pouvez seulement sélectionner 1 à 100 produits.');
+                return;
+            }
 
-            console.log(itemIdQtt + '' + itemColorQtt + '' + newQtt)
+            if (newQtt < 1) {
+                newQtt = 1;
+                alert('Veuillez sélectionner le nombre d\'articles souhaités');
+                return;
+            }
+            //console.log(itemIdQtt + '' + itemColorQtt + '' + newQtt)
 
             Update(itemIdQtt, itemColorQtt, newQtt);
             TotalPriceQuantity();
@@ -160,11 +171,13 @@ function addItem() {
     })
 };
 
-
+// fonction pour mettre a le local storage 
 function Update(productID, productColor, productQtt) {
     for (let i = 0; i < ProductLocalStorage.length; i++) {
         if (ProductLocalStorage[i].id == productID && ProductLocalStorage[i].color == productColor) {
             ProductLocalStorage[i].quantity = productQtt;
+
+
             localStorage.setItem('Basketitems', JSON.stringify(ProductLocalStorage))
             alert("Quantité modifiée")
         }
@@ -172,7 +185,7 @@ function Update(productID, productColor, productQtt) {
 
 };
 
-
+// fonction de suppression d'un produit
 function deleteItem() {
 
 
@@ -192,13 +205,13 @@ function deleteItem() {
         })
     })
 };
-
+// mise a jour de local storage suite a la suppression d'un article + suppression de la div correspondante 
 function deleteItemPlus(id, color) {
     let basketDelete = [];
 
     for (let i = 0; i < ProductLocalStorage.length; i++) {
         if (ProductLocalStorage[i].id == id && ProductLocalStorage[i].color == color) {
-            // on est sur le bon, on le vire
+            // on est sur le bon
             basketDelete = ProductLocalStorage
             basketDelete.splice([i], 1)
             localStorage.setItem('Basketitems', JSON.stringify(basketDelete))
@@ -271,7 +284,7 @@ function validForm(check) {
     return RegexValid;
 };
 
-
+// appel de la fonction suite a l'evenement change de chaque parametere pour qu'ils soient verifier 
 const firstNameCheck = document.getElementById('firstName');
 firstNameCheck.addEventListener('change', () => validForm(controlForm.firstName));
 
@@ -302,7 +315,7 @@ boutonOrder.addEventListener('click', (e) => {
     };
     if (ProductLocalStorage == null || ProductLocalStorage.length == 0) {
         alert(`Votre panier est vide`);
-      }
+    }
     // verification si le formulaire est juste 
     if (
         validForm(controlForm.firstName) == false &&
@@ -312,7 +325,7 @@ boutonOrder.addEventListener('click', (e) => {
         validForm(controlForm.email) == false
     ) {
         alert(`Le formulaire est incorrect.`);
-    } 
+    }
     if (
         ProductLocalStorage.length > 0 &&
         validForm(controlForm.firstName) &&
@@ -320,7 +333,7 @@ boutonOrder.addEventListener('click', (e) => {
         validForm(controlForm.address) &&
         validForm(controlForm.city) &&
         validForm(controlForm.email)
-      ){
+    ) {
 
         // on appelle la fonction server 
         Server(contact);
